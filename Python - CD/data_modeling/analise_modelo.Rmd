@@ -1,0 +1,29 @@
+
+
+```{r}
+df <- read.csv("breast_cancer.csv")
+```
+
+```{r}
+modelo_tot <- glm(target ~ ., data = df, family = binomial)
+summary(modelo_tot)
+```
+
+
+```{r}
+modelo_step <- step(modelo_tot, direction = "both")
+summary(modelo_step)
+```
+
+
+```{r}
+formula(modelo_step)
+kappa(model.matrix(modelo_step), exact = TRUE)
+```
+
+O procedimento stepwise partiu do modelo completo e selecionou um modelo mais simples com menor AIC (83.33), indicando melhor equilíbrio entre ajuste e complexidade. Nesse processo, variáveis como *mean_fractal_dimension* e *worst_perimeter* foram removidas, sugerindo que não contribuíam de forma relevante quando consideradas junto às demais — possivelmente devido à multicolinearidade.
+
+O modelo final inclui *mean_concave_points*, *mean_perimeter*, *worst_texture* e *worst_area*, todas estatisticamente significativas, formando um conjunto de preditores mais consistente. Em relação ao modelo completo, houve redução de variáveis sem perda de desempenho, além de ganho em interpretabilidade.
+
+Os avisos sobre probabilidades 0 ou 1 indicam possível separação dos dados, o que sugere alto poder discriminatório, mas também exige cautela na interpretação dos coeficientes.
+
